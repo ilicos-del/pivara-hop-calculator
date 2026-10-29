@@ -90,7 +90,24 @@ d.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
 }
 
 ids.forEach(id=>{
-document.getElementById(id).addEventListener('input',calc);
+  const field = document.getElementById(id);
+
+  field.addEventListener('beforeinput', function(e){
+    if(e.data === ','){
+      e.preventDefault();
+
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const value = this.value;
+
+      this.value = value.slice(0,start) + '.' + value.slice(end);
+
+      this.setSelectionRange(start+1,start+1);
+      calc();
+    }
+  });
+
+  field.addEventListener('input',calc);
 });
 
 function resetCalc(){

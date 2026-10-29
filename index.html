@@ -9,59 +9,155 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
- margin:0;padding:20px;background:#f5f3eb;
- color:#193326;font-family:-apple-system,sans-serif
+ margin:0;
+ padding:20px;
+ background:#f5f3eb;
+ color:#193326;
+ font-family:-apple-system,sans-serif
 }
-main{max-width:480px;margin:auto}
+
+main{
+ max-width:480px;
+ margin:auto
+}
+
 header{
- background:#173b2b;color:white;padding:25px;
- border-radius:20px;margin-bottom:20px
+ background:#173b2b;
+ color:white;
+ padding:25px;
+ border-radius:20px;
+ margin-bottom:20px
 }
-header small{letter-spacing:3px;color:#d8b66e}
-h1{font-size:27px;margin:12px 0}
+
+header small{
+ letter-spacing:3px;
+ color:#d8b66e
+}
+
+h1{
+ font-size:27px;
+ margin:12px 0
+}
+
 .card{
- background:white;border-radius:17px;
- padding:20px;margin-bottom:15px
+ background:white;
+ border-radius:17px;
+ padding:20px;
+ margin-bottom:15px
 }
-.field{margin-bottom:18px}
-.field:last-child{margin-bottom:0}
-label{display:block;font-weight:600;margin-bottom:8px}
+
+.field{
+ margin-bottom:18px
+}
+
+.field:last-child{
+ margin-bottom:0
+}
+
+label{
+ display:block;
+ font-weight:600;
+ margin-bottom:8px
+}
+
 .value{
- width:100%;padding:14px;border:2px solid #ccd5ca;
- border-radius:10px;font-size:23px;font-weight:600;
- background:#fff;color:#193326;min-height:58px
+ width:100%;
+ padding:14px;
+ border:2px solid #ccd5ca;
+ border-radius:10px;
+ font-size:23px;
+ font-weight:600;
+ background:#fff;
+ color:#193326;
+ min-height:58px
 }
-.field.active .value{border-color:#d8b66e}
+
+.field.active .value{
+ border-color:#d8b66e
+}
+
 .result{
- background:#173b2b;color:white;padding:25px;
- border-radius:20px;margin-top:15px
-}
-.result small{color:#d8b66e}
-#answer{font-size:40px;font-weight:800;margin:12px 0}
-#difference{font-size:14px}
-.keypad{
- background:white;padding:16px;border-radius:17px;
+ background:#173b2b;
+ color:white;
+ padding:25px;
+ border-radius:20px;
  margin-top:15px
 }
-.keypad-title{font-weight:700;margin-bottom:12px}
-.keys{
- display:grid;grid-template-columns:repeat(3,1fr);gap:9px
+
+.result small{
+ color:#d8b66e
 }
+
+#answer{
+ font-size:40px;
+ font-weight:800;
+ margin:12px 0
+}
+
+#difference{
+ font-size:14px
+}
+
+.keypad{
+ background:white;
+ padding:16px;
+ border-radius:17px;
+ margin-top:15px
+}
+
+.keypad-title{
+ font-weight:700;
+ margin-bottom:12px
+}
+
+.keys{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px
+}
+
 .key{
- border:0;border-radius:10px;background:#edf0e9;
- color:#193326;font-size:24px;font-weight:600;
+ border:0;
+ border-radius:10px;
+ background:#edf0e9;
+ color:#193326;
+ font-size:24px;
+ font-weight:600;
  min-height:57px
 }
-.key:active{background:#d8b66e}
-.key.special{background:#d8b66e}
-.key.clear{background:#f0e4d7}
-button.reset{
- width:100%;padding:14px;border:0;border-radius:10px;
- background:#d8b66e;color:#173b2b;font-size:16px;
- font-weight:bold;margin-top:15px
+
+.key:active{
+ background:#d8b66e
 }
-footer{text-align:center;color:#778078;font-size:12px;margin-top:25px}
+
+.key.special{
+ background:#d8b66e
+}
+
+.key.clear{
+ background:#f0e4d7
+}
+
+button.reset{
+ width:100%;
+ padding:14px;
+ border:0;
+ border-radius:10px;
+ background:#d8b66e;
+ color:#173b2b;
+ font-size:16px;
+ font-weight:bold;
+ margin-top:15px
+}
+
+footer{
+ text-align:center;
+ color:#778078;
+ font-size:12px;
+ margin-top:25px
+}
 </style>
 </head>
 
@@ -78,31 +174,36 @@ Preračunavanje alfa kiseline hmelja
 
 <div class="field active" id="field-amount">
 <label>Originalna količina hmelja (g)</label>
-<div class="value" id="amount">252</div>
+<div class="value" id="amount"></div>
 </div>
 
 <div class="field" id="field-original">
 <label>Alfa kiselina iz recepta (%)</label>
-<div class="value" id="original">3,9</div>
+<div class="value" id="original"></div>
 </div>
 
 <div class="field" id="field-newAA">
 <label>Alfa kiselina tvog hmelja (%)</label>
-<div class="value" id="newAA">4,1</div>
+<div class="value" id="newAA"></div>
 </div>
 
 </section>
 
 <section class="result">
 <small>POTREBNA KOLIČINA HMELJA</small>
-<div id="answer">239,71 g</div>
-<div id="difference"></div>
+<div id="answer">—</div>
+<div id="difference">
+Unesi sve tri vrijednosti.
+</div>
 </section>
 
 <section class="keypad">
-<div class="keypad-title">NUMERIČKA TIPKOVNICA</div>
+<div class="keypad-title">
+NUMERIČKA TIPKOVNICA
+</div>
 
 <div class="keys">
+
 <button class="key" onclick="press('1')">1</button>
 <button class="key" onclick="press('2')">2</button>
 <button class="key" onclick="press('3')">3</button>
@@ -119,13 +220,17 @@ Preračunavanje alfa kiseline hmelja
 <button class="key" onclick="press('0')">0</button>
 <button class="key clear" onclick="backspace()">⌫</button>
 
-<button class="key clear" style="grid-column:span 3"
-onclick="clearField()">OBRIŠI POLJE</button>
+<button class="key clear"
+style="grid-column:span 3"
+onclick="clearField()">
+OBRIŠI POLJE
+</button>
+
 </div>
 </section>
 
 <button class="reset" onclick="resetCalc()">
-Vrati početne vrijednosti
+Obriši sve vrijednosti
 </button>
 
 <footer>
@@ -135,99 +240,156 @@ Formula: količina × alfa recepta ÷ alfa novog hmelja
 </main>
 
 <script>
+
 const ids=['amount','original','newAA'];
+
 let active='amount';
 
+// Odabir polja
 function selectField(id){
+
  active=id;
 
  ids.forEach(x=>{
   document.getElementById('field-'+x)
   .classList.toggle('active',x===id);
  });
+
 }
 
+// Klik na polje za unos
 ids.forEach(id=>{
+
  document.getElementById('field-'+id)
- .addEventListener('click',()=>selectField(id));
+ .addEventListener('click',()=>{
+  selectField(id);
+ });
+
 });
 
+// Unos znamenke ili zareza
 function press(key){
+
  const field=document.getElementById(active);
  let value=field.textContent;
 
- if(key===','){
-  if(value.includes(','))return;
-  if(value==='')value='0';
+ // Sprječavanje dva decimalna zareza
+ if(key===',' && value.includes(',')){
+  return;
  }
 
- if(value==='0' && key!==','){
+ // Ako je polje prazno i unosimo zarez
+ if(key===',' && value===''){
+  value='0';
+ }
+
+ // Sprječavanje nepotrebnih nula na početku
+ if(value==='0' && key!==' ,'.trim() && key!==','){
   value=key;
  }else{
   value+=key;
  }
 
  field.textContent=value;
+
  calc();
+
 }
 
+// Brisanje zadnje znamenke
 function backspace(){
+
  const field=document.getElementById(active);
+
  field.textContent=field.textContent.slice(0,-1);
+
  calc();
+
 }
 
+// Brisanje odabranog polja
 function clearField(){
+
  document.getElementById(active).textContent='';
+
  calc();
+
 }
 
+// Pretvaranje decimalnog zareza u broj
 function parseValue(value){
+
+ if(value.trim()===''){
+  return NaN;
+ }
+
  return Number(value.replace(',','.'));
+
 }
 
+// Izračun
 function calc(){
+
  const values=ids.map(id=>
   parseValue(document.getElementById(id).textContent)
  );
 
  const [a,r,h]=values;
+
  const out=document.getElementById('answer');
  const diff=document.getElementById('difference');
 
- if(ids.some(id=>
-  document.getElementById(id).textContent==='')||
-  values.some(v=>!Number.isFinite(v))||
-  a<=0||r<=0||h<=0||r>100||h>100){
+ // Provjera unosa
+ if(
+  ids.some(id=>
+   document.getElementById(id).textContent===''
+  ) ||
+  values.some(v=>!Number.isFinite(v)) ||
+  a<=0 || r<=0 || h<=0 ||
+  r>100 || h>100
+ ){
 
   out.textContent='—';
   diff.textContent='Unesi sve tri ispravne vrijednosti.';
+
   return;
+
  }
 
+ // Formula
  const n=a*r/h;
  const d=n-a;
 
- out.textContent=n.toLocaleString('hr-HR',{
-  maximumFractionDigits:2
- })+' g';
+ out.textContent=
+  n.toLocaleString('hr-HR',{
+   maximumFractionDigits:2
+  })+' g';
 
- diff.textContent='Razlika: '+(d>0?'+':'')+
- d.toLocaleString('hr-HR',{
-  maximumFractionDigits:2
- })+' g';
+ diff.textContent=
+  'Razlika: '+(d>0?'+':'')+
+  d.toLocaleString('hr-HR',{
+   maximumFractionDigits:2
+  })+' g';
+
 }
 
+// Brisanje svih vrijednosti
 function resetCalc(){
- document.getElementById('amount').textContent='252';
- document.getElementById('original').textContent='3,9';
- document.getElementById('newAA').textContent='4,1';
+
+ ids.forEach(id=>{
+  document.getElementById(id).textContent='';
+ });
 
  selectField('amount');
+
  calc();
+
 }
 
+// Početno stanje
 calc();
+
 </script>
+
 </body>
 </html>

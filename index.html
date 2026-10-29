@@ -85,8 +85,6 @@ input:focus{border-color:#d8b66e}
  margin:12px 0
 }
 
-#difference{font-size:14px}
-
 button.reset{
  width:100%;
  padding:14px;
@@ -97,13 +95,6 @@ button.reset{
  font-size:16px;
  font-weight:bold;
  margin-top:15px
-}
-
-footer{
- text-align:center;
- color:#778078;
- font-size:12px;
- margin-top:25px
 }
 </style>
 </head>
@@ -121,35 +112,17 @@ Preračunavanje alfa kiseline hmelja
 
 <div class="field">
 <label for="amount">Originalna količina hmelja (g)</label>
-<input
- id="amount"
- type="text"
- inputmode="decimal"
- autocomplete="off"
- enterkeyhint="next"
->
+<input id="amount" type="text" inputmode="decimal" autocomplete="off" enterkeyhint="next">
 </div>
 
 <div class="field">
 <label for="original">Alfa kiselina iz recepta (%)</label>
-<input
- id="original"
- type="text"
- inputmode="decimal"
- autocomplete="off"
- enterkeyhint="next"
->
+<input id="original" type="text" inputmode="decimal" autocomplete="off" enterkeyhint="next">
 </div>
 
 <div class="field">
 <label for="newAA">Alfa kiselina tvog hmelja (%)</label>
-<input
- id="newAA"
- type="text"
- inputmode="decimal"
- autocomplete="off"
- enterkeyhint="done"
->
+<input id="newAA" type="text" inputmode="decimal" autocomplete="off" enterkeyhint="done">
 </div>
 
 </section>
@@ -157,13 +130,11 @@ Preračunavanje alfa kiseline hmelja
 <section class="result">
 <small>POTREBNA KOLIČINA HMELJA</small>
 <div id="answer">—</div>
-<div id="difference">Unesi sve tri vrijednosti.</div>
 </section>
 
 <button class="reset" onclick="resetCalc()">
 Obriši sve vrijednosti
 </button>
-
 
 </main>
 
@@ -183,7 +154,6 @@ function calc(){
 
  const [a,r,h]=values;
  const out=document.getElementById('answer');
- const diff=document.getElementById('difference');
 
  if(
   ids.some(id=>document.getElementById(id).value.trim()==='') ||
@@ -191,17 +161,14 @@ function calc(){
   a<=0 || r<=0 || h<=0 || r>100 || h>100
  ){
   out.textContent='—';
-  diff.textContent='Unesi sve tri ispravne vrijednosti.';
   return;
  }
 
  const n=a*r/h;
- const d=n-a;
 
  out.textContent=n.toLocaleString('hr-HR',{
   maximumFractionDigits:2
  })+' g';
-
 }
 
 ids.forEach((id,index)=>{
@@ -226,7 +193,6 @@ function resetCalc(){
  ids.forEach(id=>{
   document.getElementById(id).value='';
  });
-
  calc();
 }
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173b2b">
+<title>Pivara Hop Calculator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#f5f3eb;color:#193326;font-family:-apple-system,sans-serif}
+main{max-width:480px;margin:auto}
+header{background:#173b2b;color:white;padding:25px;border-radius:20px;margin-bottom:20px}
+header small{letter-spacing:3px;color:#d8b66e}
+h1{font-size:27px;margin:12px 0}
+.card{background:white;border-radius:17px;padding:20px;margin-bottom:15px}
+label{display:block;font-weight:600;margin:15px 0 8px}
+input{width:100%;padding:14px;border:1px solid #ccd5ca;border-radius:10px;font-size:19px}
+.result{background:#173b2b;color:white;padding:25px;border-radius:20px;margin-top:15px}
+.result small{color:#d8b66e}
+#answer{font-size:40px;font-weight:800;margin:12px 0}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#d8b66e;color:#173b2b;font-size:16px;font-weight:bold;margin-top:15px}
+footer{text-align:center;color:#778078;font-size:12px;margin-top:25px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<small>PIVARA · BREWING TOOLS</small>
+<h1>Hop Calculator</h1>
+Preračunavanje alfa kiseline hmelja
+</header>
+<section class="card">
+<label>Originalna količina hmelja (g)</label>
+<input id="amount" type="number" value="252" step="any">
+<label>Alfa kiselina iz recepta (%)</label>
+<input id="original" type="number" value="3.9" step="any">
+<label>Alfa kiselina tvog hmelja (%)</label>
+<input id="newAA" type="number" value="4.1" step="any">
+</section>
+<section class="result">
+<small>POTREBNA KOLIČINA HMELJA</small>
+<div id="answer">239,71 g</div>
+<div id="difference"></div>
+</section>
+<button onclick="resetCalc()">Vrati početne vrijednosti</button>
+<footer>Formula: količina × alfa recepta ÷ alfa novog hmelja</footer>
+</main>
+<script>
+const ids=['amount','original','newAA'];
+function calc(){
+const [a,r,h]=ids.map(id=>Number(document.getElementById(id).value));
+const out=document.getElementById('answer');
+const diff=document.getElementById('difference');
+if(ids.some(id=>document.getElementById(id).value==='')||!Number.isFinite(a)||!Number.isFinite(r)||!Number.isFinite(h)||a<=0||r<=0||h<=0||r>100||h>100){
+out.textContent='—';diff.textContent='Provjeri unesene vrijednosti.';return;
+}
+const n=a*r/h,d=n-a;
+out.textContent=n.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
+diff.textContent='Razlika: '+(d>0?'+':'')+d.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calc));
+function resetCalc(){
+document.getElementById('amount').value=252;
+document.getElementById('original').value=3.9;
+document.getElementById('newAA').value=4.1;
+calc();
+}
+calc();
+</script>
+</body>
+</html>

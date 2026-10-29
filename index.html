@@ -6,25 +6,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#173b2b">
 <title>Pivara Hop Calculator</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:20px;background:#f5f3eb;color:#193326;font-family:-apple-system,sans-serif}
+body{
+ margin:0;padding:20px;background:#f5f3eb;
+ color:#193326;font-family:-apple-system,sans-serif
+}
 main{max-width:480px;margin:auto}
-header{background:#173b2b;color:white;padding:25px;border-radius:20px;margin-bottom:20px}
+header{
+ background:#173b2b;color:white;padding:25px;
+ border-radius:20px;margin-bottom:20px
+}
 header small{letter-spacing:3px;color:#d8b66e}
 h1{font-size:27px;margin:12px 0}
-.card{background:white;border-radius:17px;padding:20px;margin-bottom:15px}
-label{display:block;font-weight:600;margin:15px 0 8px}
-input{width:100%;padding:14px;border:1px solid #ccd5ca;border-radius:10px;font-size:19px}
-.result{background:#173b2b;color:white;padding:25px;border-radius:20px;margin-top:15px}
+.card{
+ background:white;border-radius:17px;
+ padding:20px;margin-bottom:15px
+}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+label{display:block;font-weight:600;margin-bottom:8px}
+.value{
+ width:100%;padding:14px;border:2px solid #ccd5ca;
+ border-radius:10px;font-size:23px;font-weight:600;
+ background:#fff;color:#193326;min-height:58px
+}
+.field.active .value{border-color:#d8b66e}
+.result{
+ background:#173b2b;color:white;padding:25px;
+ border-radius:20px;margin-top:15px
+}
 .result small{color:#d8b66e}
 #answer{font-size:40px;font-weight:800;margin:12px 0}
-button{width:100%;padding:14px;border:0;border-radius:10px;background:#d8b66e;color:#173b2b;font-size:16px;font-weight:bold;margin-top:15px}
+#difference{font-size:14px}
+.keypad{
+ background:white;padding:16px;border-radius:17px;
+ margin-top:15px
+}
+.keypad-title{font-weight:700;margin-bottom:12px}
+.keys{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:9px
+}
+.key{
+ border:0;border-radius:10px;background:#edf0e9;
+ color:#193326;font-size:24px;font-weight:600;
+ min-height:57px
+}
+.key:active{background:#d8b66e}
+.key.special{background:#d8b66e}
+.key.clear{background:#f0e4d7}
+button.reset{
+ width:100%;padding:14px;border:0;border-radius:10px;
+ background:#d8b66e;color:#173b2b;font-size:16px;
+ font-weight:bold;margin-top:15px
+}
 footer{text-align:center;color:#778078;font-size:12px;margin-top:25px}
 </style>
 </head>
+
 <body>
 <main>
+
 <header>
 <small>PIVARA · BREWING TOOLS</small>
 <h1>Hop Calculator</h1>
@@ -32,93 +75,159 @@ Preračunavanje alfa kiseline hmelja
 </header>
 
 <section class="card">
+
+<div class="field active" id="field-amount">
 <label>Originalna količina hmelja (g)</label>
-<input id="amount" type="text" inputmode="decimal" autocomplete="off" value="252">
+<div class="value" id="amount">252</div>
+</div>
 
+<div class="field" id="field-original">
 <label>Alfa kiselina iz recepta (%)</label>
-<input id="original" type="text" inputmode="decimal" autocomplete="off" value="3,9">
+<div class="value" id="original">3,9</div>
+</div>
 
+<div class="field" id="field-newAA">
 <label>Alfa kiselina tvog hmelja (%)</label>
-<input id="newAA" type="text" inputmode="decimal" autocomplete="off" value="4,1">
+<div class="value" id="newAA">4,1</div>
+</div>
+
 </section>
 
 <section class="result">
 <small>POTREBNA KOLIČINA HMELJA</small>
-<div id="answer">—</div>
+<div id="answer">239,71 g</div>
 <div id="difference"></div>
 </section>
 
-<button onclick="resetCalc()">Vrati početne vrijednosti</button>
+<section class="keypad">
+<div class="keypad-title">NUMERIČKA TIPKOVNICA</div>
 
-<footer>Formula: količina × alfa recepta ÷ alfa novog hmelja</footer>
+<div class="keys">
+<button class="key" onclick="press('1')">1</button>
+<button class="key" onclick="press('2')">2</button>
+<button class="key" onclick="press('3')">3</button>
+
+<button class="key" onclick="press('4')">4</button>
+<button class="key" onclick="press('5')">5</button>
+<button class="key" onclick="press('6')">6</button>
+
+<button class="key" onclick="press('7')">7</button>
+<button class="key" onclick="press('8')">8</button>
+<button class="key" onclick="press('9')">9</button>
+
+<button class="key special" onclick="press(',')">,</button>
+<button class="key" onclick="press('0')">0</button>
+<button class="key clear" onclick="backspace()">⌫</button>
+
+<button class="key clear" style="grid-column:span 3"
+onclick="clearField()">OBRIŠI POLJE</button>
+</div>
+</section>
+
+<button class="reset" onclick="resetCalc()">
+Vrati početne vrijednosti
+</button>
+
+<footer>
+Formula: količina × alfa recepta ÷ alfa novog hmelja
+</footer>
+
 </main>
 
 <script>
 const ids=['amount','original','newAA'];
+let active='amount';
 
-function parseValue(value){
-return Number(
-value.trim()
-.replace(/\s/g,'')
-.replace(',','.')
-);
-}
+function selectField(id){
+ active=id;
 
-function calc(){
-const values=ids.map(id=>
-parseValue(document.getElementById(id).value)
-);
-
-const [a,r,h]=values;
-const out=document.getElementById('answer');
-const diff=document.getElementById('difference');
-
-if(ids.some(id=>document.getElementById(id).value.trim()==='')||
-values.some(v=>!Number.isFinite(v))||
-a<=0||r<=0||h<=0||r>100||h>100){
-out.textContent='—';
-diff.textContent='Provjeri unesene vrijednosti.';
-return;
-}
-
-const n=a*r/h;
-const d=n-a;
-
-out.textContent=n.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
-diff.textContent='Razlika: '+(d>0?'+':'')+
-d.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
+ ids.forEach(x=>{
+  document.getElementById('field-'+x)
+  .classList.toggle('active',x===id);
+ });
 }
 
 ids.forEach(id=>{
-  const field = document.getElementById(id);
-
-  field.addEventListener('beforeinput', function(e){
-    if(e.data === ','){
-      e.preventDefault();
-
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
-      const value = this.value;
-
-      this.value = value.slice(0,start) + '.' + value.slice(end);
-
-      this.setSelectionRange(start+1,start+1);
-      calc();
-    }
-  });
-
-  field.addEventListener('input',calc);
+ document.getElementById('field-'+id)
+ .addEventListener('click',()=>selectField(id));
 });
 
+function press(key){
+ const field=document.getElementById(active);
+ let value=field.textContent;
+
+ if(key===','){
+  if(value.includes(','))return;
+  if(value==='')value='0';
+ }
+
+ if(value==='0' && key!==','){
+  value=key;
+ }else{
+  value+=key;
+ }
+
+ field.textContent=value;
+ calc();
+}
+
+function backspace(){
+ const field=document.getElementById(active);
+ field.textContent=field.textContent.slice(0,-1);
+ calc();
+}
+
+function clearField(){
+ document.getElementById(active).textContent='';
+ calc();
+}
+
+function parseValue(value){
+ return Number(value.replace(',','.'));
+}
+
+function calc(){
+ const values=ids.map(id=>
+  parseValue(document.getElementById(id).textContent)
+ );
+
+ const [a,r,h]=values;
+ const out=document.getElementById('answer');
+ const diff=document.getElementById('difference');
+
+ if(ids.some(id=>
+  document.getElementById(id).textContent==='')||
+  values.some(v=>!Number.isFinite(v))||
+  a<=0||r<=0||h<=0||r>100||h>100){
+
+  out.textContent='—';
+  diff.textContent='Unesi sve tri ispravne vrijednosti.';
+  return;
+ }
+
+ const n=a*r/h;
+ const d=n-a;
+
+ out.textContent=n.toLocaleString('hr-HR',{
+  maximumFractionDigits:2
+ })+' g';
+
+ diff.textContent='Razlika: '+(d>0?'+':'')+
+ d.toLocaleString('hr-HR',{
+  maximumFractionDigits:2
+ })+' g';
+}
+
 function resetCalc(){
-document.getElementById('amount').value='252';
-document.getElementById('original').value='3,9';
-document.getElementById('newAA').value='4,1';
-calc();
+ document.getElementById('amount').textContent='252';
+ document.getElementById('original').textContent='3,9';
+ document.getElementById('newAA').textContent='4,1';
+
+ selectField('amount');
+ calc();
 }
 
 calc();
 </script>
 </body>
 </html>
-

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hr">
 <head>
@@ -29,43 +30,78 @@ footer{text-align:center;color:#778078;font-size:12px;margin-top:25px}
 <h1>Hop Calculator</h1>
 Preračunavanje alfa kiseline hmelja
 </header>
+
 <section class="card">
 <label>Originalna količina hmelja (g)</label>
-<input id="amount" type="text" inputmode="decimal" autocomplete="off">
+<input id="amount" type="text" inputmode="decimal" autocomplete="off" value="252">
+
 <label>Alfa kiselina iz recepta (%)</label>
-<input id="original" type="number" inputmode="decimal">
+<input id="original" type="text" inputmode="decimal" autocomplete="off" value="3,9">
+
 <label>Alfa kiselina tvog hmelja (%)</label>
-<input id="newAA" type="number" inputmode="decimal">
+<input id="newAA" type="text" inputmode="decimal" autocomplete="off" value="4,1">
 </section>
+
 <section class="result">
 <small>POTREBNA KOLIČINA HMELJA</small>
-<div id="answer">239,71 g</div>
+<div id="answer">—</div>
 <div id="difference"></div>
 </section>
+
 <button onclick="resetCalc()">Vrati početne vrijednosti</button>
+
 <footer>Formula: količina × alfa recepta ÷ alfa novog hmelja</footer>
 </main>
+
 <script>
 const ids=['amount','original','newAA'];
+
+function parseValue(value){
+return Number(
+value.trim()
+.replace(/\s/g,'')
+.replace(',','.')
+);
+}
+
 function calc(){
-const [a,r,h]=ids.map(id=>Number(document.getElementById(id).value));
+const values=ids.map(id=>
+parseValue(document.getElementById(id).value)
+);
+
+const [a,r,h]=values;
 const out=document.getElementById('answer');
 const diff=document.getElementById('difference');
-if(ids.some(id=>document.getElementById(id).value==='')||!Number.isFinite(a)||!Number.isFinite(r)||!Number.isFinite(h)||a<=0||r<=0||h<=0||r>100||h>100){
-out.textContent='—';diff.textContent='Provjeri unesene vrijednosti.';return;
+
+if(ids.some(id=>document.getElementById(id).value.trim()==='')||
+values.some(v=>!Number.isFinite(v))||
+a<=0||r<=0||h<=0||r>100||h>100){
+out.textContent='—';
+diff.textContent='Provjeri unesene vrijednosti.';
+return;
 }
-const n=a*r/h,d=n-a;
+
+const n=a*r/h;
+const d=n-a;
+
 out.textContent=n.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
-diff.textContent='Razlika: '+(d>0?'+':'')+d.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
+diff.textContent='Razlika: '+(d>0?'+':'')+
+d.toLocaleString('hr-HR',{maximumFractionDigits:2})+' g';
 }
-ids.forEach(id=>document.getElementById(id).addEventListener('input',calc));
+
+ids.forEach(id=>{
+document.getElementById(id).addEventListener('input',calc);
+});
+
 function resetCalc(){
-document.getElementById('amount').value=252;
-document.getElementById('original').value=3.9;
-document.getElementById('newAA').value=4.1;
+document.getElementById('amount').value='252';
+document.getElementById('original').value='3,9';
+document.getElementById('newAA').value='4,1';
 calc();
 }
+
 calc();
 </script>
 </body>
 </html>
+
